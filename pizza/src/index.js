@@ -69,28 +69,36 @@ function Header(){
 }
 
 function Menu() {
-  const pizzas = pizzaData;
+  
+  const numPizzas = pizzaData.length
   return (
     <main className='menu'>
       <h2>Our menu</h2>
-      {pizzas && (<ul className='pizzas'>
-        {pizzaData.map(pizza=><Pizza pizzaObj = {pizza} key={pizza.name}/>)}
-      </ul>)}
       
-      
+      {numPizzas > 0 ? (
+      <React.Fragment>
+      <p>Authentic Italian cuisine. 6 creative dishes to choose form.All form our stone oven,all organic,all delicious.</p>
+      <ul className='pizzas'>{pizzaData.map(pizza=>
+      <Pizza pizzaObj = {pizza} key={pizza.name}/>)}
+      </ul>
+      </React.Fragment>
+      ) : (<p>We're still working on our menu. Please come back later.</p>
+      )}
     </main>
-  
-  )
-}
+    )}
 
-function Pizza(props){
+function Pizza({pizzaObj}){
+
+
+  
   return(
-    <li className='pizza'>
-      <img className="pizza" src={props.pizzaObj.photoName} alt={props.pizzaObj.name}></img>
+    <li className={pizzaObj.soldOut ? 'pizza sold-out': 'pizza'}>
+      <img className="pizza" src={pizzaObj.photoName} alt={pizzaObj.name}></img>
       <div>
-        <h3 className='pizza'>{props.pizzaObj.name}</h3>
-        <p className='pizza'>{props.pizzaObj.ingredients}</p>
-        <span className='pizza'>{props.pizzaObj.price + 2 + "$"}</span>
+        <h3 className='pizza'>{pizzaObj.name}</h3>
+        <p className='pizza'>{pizzaObj.ingredients}</p>
+        
+        <span className='pizza'>{pizzaObj.soldOut ? 'SOLD OUT' : pizzaObj.price + "$"}</span>
       </div>
       
     </li>
@@ -104,14 +112,20 @@ function Footer(){
   const isOpen = hour >= openHour && hour <= closeHour;  
   
   return (
-  <footer className='footer'>
-    <div className='order'>
-      {isOpen ? "We're currently open!" : "We're currently close!"}
-      <button className='btn'>Order</button>
-    </div>
+    <footer className='footer'>
+      <Order isOpen = {isOpen}/>
     </footer>
+  );
+}
+function Order({isOpen}){
+  return(
+    <div className='order'>
+  {isOpen ? "We're currently open!" : "We're currently close!"}
+  <button className='btn'>Order</button>
+  </div>
   )
 }
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
